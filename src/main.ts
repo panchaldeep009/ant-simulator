@@ -4,9 +4,13 @@ import "./style.css";
 import { ECS } from "./ecs";
 import { Ants } from "./Entities/Ant";
 import { Food } from "./Entities/Food";
-import { AntWalking } from "./Systems/AntWalking";
-import { PointRender } from "./Systems/PointRender";
+import { AntWondering } from "./Systems/AntWondering";
+import { CircleRender } from "./Systems/CircleRender";
+import { PheromoneEvaporator } from "./Systems/PheromoneEvaporation";
+import { PheromoneDropping } from "./Systems/PheromoneDropping";
 import { ViewSightRender } from "./Systems/ViewSightRender";
+import { PointRender } from "./Systems/PointRender";
+import { Walking } from "./Systems/Walking";
 
 const sketch = (p5: P5) => {
   const world = new ECS(p5);
@@ -20,24 +24,34 @@ const sketch = (p5: P5) => {
     p5.background("#333");
 
     for (let i = 0; i < 10; i++) {
-      world.addEntity(new Food(p5.random(0, p5.width), p5.random(0, p5.width)));
-    }
-
-    // all ants start at the center of the canvas in 5 radius
-
-    for (let i = 0; i < 1000; i++) {
       world.addEntity(
-        new Ants(
-          p5.random(p5.width / 2 - 5, p5.width / 2 + 5),
-          p5.random(p5.height / 2 - 5, p5.height / 2 + 5),
-          p5.random(0, 2 * Math.PI)
+        new Food(
+          p5.random(0, p5.width),
+          p5.random(0, p5.width),
+          p5.color(0, 255, 0)
         )
       );
     }
 
-    world.addSystem(new AntWalking());
+    // all ants start at the center of the canvas in 5 radius
+
+    for (let i = 0; i < 2000; i++) {
+      world.addEntity(
+        new Ants(
+          p5.random(p5.width / 2 - 5, p5.width / 2 + 5),
+          p5.random(p5.height / 2 - 5, p5.height / 2 + 5),
+          p5.random(0, 2 * Math.PI),
+          p5.color(255, 0, 0)
+        )
+      );
+    }
+
+    world.addSystem(new PheromoneEvaporator());
+    world.addSystem(new PheromoneDropping());
+    world.addSystem(new AntWondering());
     world.addSystem(new PointRender());
-    // world.addSystem(new ViewSightRender());
+    world.addSystem(new CircleRender());
+    world.addSystem(new Walking());
   };
 
   p5.draw = () => {
