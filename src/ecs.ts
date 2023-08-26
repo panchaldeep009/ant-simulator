@@ -55,11 +55,16 @@ export abstract class System {
 export class ECS {
   constructor(public readonly p5: P5) {}
   readonly entities = new Set<Entity>();
+  readonly entitiesByType = new Map<Function, Set<Entity>>();
   readonly systems = new Set<System>();
 
   public addEntity(entity: Entity) {
     this.entities.add(entity);
     this.checkEntity(entity);
+    if (!this.entitiesByType.has(entity.constructor)) {
+      this.entitiesByType.set(entity.constructor, new Set());
+    }
+    this.entitiesByType.get(entity.constructor)?.add(entity);
     return this;
   }
 
@@ -70,6 +75,7 @@ export class ECS {
         system.entities.delete(entity);
       }
     });
+    this.entitiesByType.get(entity.constructor)?.delete(entity);
     return this;
   }
 

@@ -11,6 +11,7 @@ import { PheromoneDropping } from "./Systems/PheromoneDropping";
 import { ViewSightRender } from "./Systems/ViewSightRender";
 import { PointRender } from "./Systems/PointRender";
 import { Walking } from "./Systems/Walking";
+import { FoodSensing } from "./Systems/FoodSensing";
 
 const sketch = (p5: P5) => {
   const world = new ECS(p5);
@@ -35,7 +36,7 @@ const sketch = (p5: P5) => {
 
     // all ants start at the center of the canvas in 5 radius
 
-    for (let i = 0; i < 2000; i++) {
+    for (let i = 0; i < 100; i++) {
       world.addEntity(
         new Ants(
           p5.random(p5.width / 2 - 5, p5.width / 2 + 5),
@@ -48,10 +49,12 @@ const sketch = (p5: P5) => {
 
     world.addSystem(new PheromoneEvaporator());
     world.addSystem(new PheromoneDropping());
+    world.addSystem(new FoodSensing());
     world.addSystem(new AntWondering());
     world.addSystem(new PointRender());
     world.addSystem(new CircleRender());
     world.addSystem(new Walking());
+    world.addSystem(new ViewSightRender());
   };
 
   p5.draw = () => {

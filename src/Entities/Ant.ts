@@ -5,6 +5,7 @@ import { Velocity } from "../Components/Velocity";
 import { ViewSight } from "../Components/ViewSight";
 import { Entity } from "../ecs";
 import { PheromoneGenerator } from "../Components/PheromoneGenerator";
+import { Attracted } from "../Components/Attracted";
 
 export class Ants extends Entity {
   constructor(
@@ -20,7 +21,8 @@ export class Ants extends Entity {
       new Velocity(10, direction),
       new Circle(color, 5),
       new ViewSight(50, 1),
-      new PheromoneGenerator()
+      new PheromoneGenerator(),
+      new Attracted()
     );
   }
 }
